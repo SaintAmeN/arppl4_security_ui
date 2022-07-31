@@ -7,7 +7,7 @@ import {connect} from "react-redux";
 import * as actions from "../../redux/actions";
 
 // See: https://github.com/SaintAmeN/arppl4_react_rental_ui/blob/master/src/components/carform/CarForm.js
-const LoginPage = () => {
+const LoginPage = (props) => {
     const [authorization, setAuthorization] = useState({});
 
     const updateValue = (event, name) => {
@@ -19,7 +19,8 @@ const LoginPage = () => {
     }
 
     const sendForm = () => {
-
+        console.log('Login attempt.')
+        props.authenticate(authorization);
     }
 
     return (
@@ -33,6 +34,7 @@ const LoginPage = () => {
                             }}
                             value={authorization.username}
                             label={"Username:"}
+                            disabled={props.isLoading}
                             variant={"filled"}/>
                     </Grid>
                     <Grid item xs={12} className={classes.FormItem}>
@@ -43,16 +45,19 @@ const LoginPage = () => {
                             }}
                             value={authorization.password}
                             label={"Password:"}
+                            disabled={props.isLoading}
                             variant={"filled"}/>
                     </Grid>
                     <Grid container className={classes.FormButtonPanel}>
                         <Grid item xs={2}>
+                            {props.isLoading ? "True" : "False"}
                         </Grid>
                         <Grid item xs={8}></Grid>
                         <Grid item xs={2}>
                             <Button className={classes.FormButtonSubmit}
                                     variant={"contained"}
                                     onClick={sendForm}
+                                    disabled={props.isLoading}
                                     endIcon={<Send/>}>
                                 Submit
                             </Button>
@@ -65,7 +70,9 @@ const LoginPage = () => {
 };
 
 const mapStateToProps = state => {
-
+    return {
+        isLoading: state.authorization.loading,
+    }
 }
 
 const mapDispatchToProps = dispatch => {
